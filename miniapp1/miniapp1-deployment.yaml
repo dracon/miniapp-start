@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: miniapp1
-          image: ghcr.io/dracon/miniapp-start:main
+          image: ghcr.io/dracon/miniapp-start:v1.0.0
           resources:
             requests:
               memory: "32Mi"
