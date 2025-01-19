@@ -5,6 +5,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// builder.WebHost.ConfigureKestrel(options => 
+// {
+//     options.ListenAnyIP(80);
+//     options.ListenAnyIP(443, listenOptions => {
+//         listenOptions.UseHttps("/https/localhost.crt", "/https/localhost.key");
+//     });
+
+// });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

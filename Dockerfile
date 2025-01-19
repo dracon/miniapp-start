@@ -11,6 +11,27 @@
 # Learn about building .NET container images:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
 
+# Start with the base image for ASP.NET
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# WORKDIR /app
+# EXPOSE 80
+# EXPOSE 443
+
+# Install OpenSSL
+# RUN apt-get update && \
+#     apt-get install -y openssl && \
+#     apt-get clean
+
+# RUN mkdir -p /https
+
+# # Generate a self-signed certificate
+# RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#     -keyout /https/localhost.key \
+#     -out /https/localhost.crt \
+#     -subj "/CN=localhost"
+
+# RUN chmod 600 /https/localhost.key && chmod 644 /https/localhost.crt
+
 # Create a stage for building the application.
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
@@ -44,9 +65,16 @@ RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
 # or SHA (e.g., mcr.microsoft.com/dotnet/aspnet@sha256:f3d99f54d504a21d38e4cc2f13ff47d67235efeeb85c109d3d1ff1808b38d034).
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
 WORKDIR /app
-
+# EXPOSE 8080
+EXPOSE 443
 # Copy everything needed to run the app from the "build" stage.
 COPY --from=build /app .
+# COPY --from=base /https /https
+
+# Copy the PFX certificate into the container
+# COPY ./aspnetapp.pfx /https/aspnetapp.pfx
+# ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+# ENV ASPNETCORE_Kestrel__Certificates__Default__Password=yourpassword
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
