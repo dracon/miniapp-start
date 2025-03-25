@@ -10,7 +10,7 @@ spec:
     - name: miniapp1
       protocol: TCP
       port: 8080
-      targetPort: 8888
+      targetPort: 8080
       # If you set the `spec.type` field to `NodePort` and you want a specific port number,
       # you can specify a value in the `spec.ports[*].nodePort` field.
       # nodePort: 8888
